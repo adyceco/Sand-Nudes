@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>SAND NUDES FILM FESTIVAL</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div id="logo-container">
+        <img src="assets/logo.png" alt="SAND NUDES LOGO" id="festival-logo" />
+    </div>
+
+    <main id="app-wrapper">
+        <section id="view-films" class="view-section active">
+            <div class="section-header">
+                <h1>FILMS</h1>
+                <button id="btn-random-film" class="jagged-star-btn">
+                    <span>RANDOM FILM</span>
+                </button>
+            </div>
+            <div class="player-wrapper">
+                <div id="film-player-container">
+                    <div id="video-placeholder">LOADING TAPE...</div>
+                    <!-- 🟢 caption now inside the container, will be absolutely positioned -->
+                    <div id="film-caption"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The rest of the sections remain unchanged -->
+        <section id="view-photos" class="view-section">
+            <div class="section-header">
+                <h1>PHOTOS</h1>
+                <button id="btn-shuffle-photos" class="jagged-star-btn">
+                    <span>SHUFFLE PHOTOS</span>
+                </button>
+            </div>
+            <div id="archive-grid" class="masonry-grid"></div>
+        </section>
+
+        <section id="view-credits" class="view-section full-viewport-section">
+            <div class="section-header">
+                <h1>CREDITS</h1>
+            </div>
+            <div id="credits-marquee-container">
+                <div id="credits-marquee-track"></div>
+            </div>
+        </section>
+
+        <section id="view-about" class="view-section">
+            <div class="about-editorial">
+                <h1>ABOUT</h1>
+                <p class="lead-text">
+                    SAND NUDES IS A CONTEMPORARY CINEMATIC UNDERGROUND SURF AND DUST EXPLORATION METRIC. ESTABLISHED IN THE AGE OF THE <span class="scramble-word">RADICAL</span> INDUSTRIAL LANDSCAPE.
+                </p>
+                <div class="about-row">
+                    <div class="about-text-block">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea <span class="scramble-word">commodo</span> consequat.</p>
+                        <blockquote class="brutalist-quote">"A SHARP CUT AGAINST THE SANDSTONE."</blockquote>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia <span class="scramble-word">deserunt</span> mollit anim id est laborum.</p>
+                    </div>
+                    <div class="editorial-image-wrapper vertical-placeholder">
+                        <span>EDITORIAL FRAME [V]</span>
+                    </div>
+                </div>
+                <div class="about-row reverse">
+                    <div class="editorial-image-wrapper horizontal-placeholder">
+                        <span>EDITORIAL FRAME [H]</span>
+                    </div>
+                    <div class="about-text-block">
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo <span class="scramble-word">inventore</span> veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <nav id="bottom-nav">
+        <button class="nav-btn active" data-target="view-films">FILMS</button>
+        <button class="nav-btn" data-target="view-photos">PHOTOS</button>
+        <button class="nav-btn" data-target="view-credits">CREDITS</button>
+        <button class="nav-btn" data-target="view-about">ABOUT</button>
+    </nav>
+
+    <div id="lightbox" class="lightbox-hidden">
+        <div id="lightbox-content"></div>
+        <div id="lightbox-close">CLOSE</div>
+    </div>
+
+    <div id="custom-cursor"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
