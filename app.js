@@ -244,14 +244,14 @@ function initFilmsSection() {
     function createFallbackIframe(videoId, shouldAutoplay) {
         playerContainer.innerHTML = '';
         const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=${shouldAutoplay ? 1 : 0}&playsinline=1&rel=0&modestbranding=1`;
+        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=${shouldAutoplay ? 1 : 0}&playsinline=1&rel=0&modestbranding=1`;
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
         iframe.referrerPolicy = "strict-origin-when-cross-origin";
         iframe.allowFullscreen = true;
         playerContainer.appendChild(iframe);
     }
 
-    // Reuses a single persistent YT.Player instance to avoid YouTube's anti-bot login wall
+    // Reuses a single persistent YT.Player instance with youtube-nocookie.com to avoid redirect loops and bot checks
     function loadVideo(videoObj, shouldAutoplay = false) {
         updateFilmMeta(videoObj);
         shownVideos.add(videoObj.id);
@@ -267,7 +267,7 @@ function initFilmsSection() {
         if (player && isPlayerReady) {
             try {
                 player.unMute();
-                if (shouldAutoplay || hasUserPlayedInsideIframe) {
+                if (shouldAutoplay) {
                     player.loadVideoById(videoObj.id);
                 } else {
                     player.cueVideoById(videoObj.id);
@@ -281,9 +281,18 @@ function initFilmsSection() {
             }
         }
 
+        let ytDiv = document.getElementById('yt-player');
+        if (!ytDiv) {
+            playerContainer.innerHTML = `
+                <div id="video-placeholder">LOADING FILM...</div>
+                <div id="yt-player"></div>
+            `;
+        }
+
         try {
             player = new YT.Player('yt-player', {
                 videoId: videoObj.id,
+                host: 'https://www.youtube-nocookie.com',
                 playerVars: {
                     autoplay: shouldAutoplay ? 1 : 0,
                     playsinline: 1,
@@ -293,14 +302,10 @@ function initFilmsSection() {
                     origin: window.location.origin
                 },
                 events: {
-                    onReady: (event) => {
+                    onReady: () => {
                         isPlayerReady = true;
                         const ph = document.getElementById('video-placeholder');
                         if (ph) ph.remove();
-                        const iframe = event.target.getIframe && event.target.getIframe();
-                        if (iframe) {
-                            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-                        }
                     },
                     onStateChange: (event) => {
                         if (event.data === YT.PlayerState.PLAYING) {
@@ -310,6 +315,10 @@ function initFilmsSection() {
                             const next = getNextVideo();
                             loadVideo(next, true);
                         }
+                    },
+                    onError: (event) => {
+                        console.warn('YouTube Player error:', event.data);
+                        createFallbackIframe(videoObj.id, shouldAutoplay);
                     }
                 }
             });
@@ -329,9 +338,9 @@ function initFilmsSection() {
             if (rollBtnMobile) rollBtnMobile.classList.remove("clicked");
         }, 200);
         const next = getNextVideo();
-        // On initial load, cue without forced autoplay unless user enabled AUTOPLAY: ON.
-        // This prevents YouTube from flagging cold unauthenticated autoplay requests as a bot.
-        const shouldAutoplay = isInitialLoad ? false : (autoplay || hasUserPlayedInsideIframe);
+        // On initial load, cue without forced autoplay so the browser/YouTube doesn't flag automated playback.
+        // On user click ("RANDOM FILM"), play the film immediately!
+        const shouldAutoplay = isInitialLoad ? false : true;
         loadVideo(next, shouldAutoplay);
     }
 
